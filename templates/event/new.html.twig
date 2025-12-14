@@ -1,0 +1,42 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Create Event{% endblock %}
+
+{% block body %}
+<div class="container my-5">
+    <h1>Create Event</h1>
+    <form method="post">
+        <div class="mb-3">
+            <label class="form-label">Title</label>
+            <input name="title" class="form-control" required>
+        </div>
+        <div class="mb-3">
+            <label class="form-label">Description</label>
+            <textarea name="description" class="form-control" rows="4"></textarea>
+        </div>
+        <div class="mb-3 row">
+            <div class="col">
+                <label class="form-label">Start At</label>
+                <input name="startAt" type="datetime-local" class="form-control" required>
+            </div>
+            <div class="col">
+                <label class="form-label">End At</label>
+                <input name="endAt" type="datetime-local" class="form-control">
+            </div>
+        </div>
+        <div class="mb-3">
+            <label class="form-label">Location</label>
+            <input name="location" class="form-control">
+        </div>
+        <div class="mb-3">
+            <label class="form-label">Image URL</label>
+            <input name="image" class="form-control">
+        </div>
+        <div class="mb-3 form-check">
+            <input name="published" type="checkbox" value="1" class="form-check-input" checked>
+            <label class="form-check-label">Published</label>
+        </div>
+        <button class="btn btn-primary">Create</button>
+    </form>
+</div>
+{% endblock %}

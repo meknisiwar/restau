@@ -1,0 +1,48 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}{{ event.title }}{% endblock %}
+
+{% block body %}
+<div class="container my-5">
+    <a href="{{ path('app_event_index') }}">&larr; Back to events</a>
+
+    <div class="card mt-3">
+        <img src="{{ event.image ?: asset('images/food_bg.jpg') }}" class="card-img-top" style="height:300px;object-fit:cover;" alt="{{ event.title }}">
+        <div class="card-body">
+            <div class="d-flex justify-content-between align-items-start">
+                <div>
+                    <h1>{{ event.title }}</h1>
+                    <p class="small text-muted">{{ event.startAt ? event.startAt.format('Y-m-d H:i') : '' }}{% if event.endAt %} - {{ event.endAt.format('Y-m-d H:i') }}{% endif %}</p>
+                    {% if event.location %}<p><strong>Location:</strong> {{ event.location }}</p>{% endif %}
+                </div>
+                <div class="text-end">
+                    <div class="small text-muted">Registrations</div>
+                    <div class="fs-4 fw-bold">{{ rsvpCount|default(0) }}</div>
+                </div>
+            </div>
+
+            <p class="mt-3">{{ event.description }}</p>
+
+            {% if is_granted('ROLE_USER') %}
+                {% if userRsvp %}
+                    <form method="post" action="{{ path('app_event_rsvp_cancel', {id: event.id}) }}" onsubmit="return confirm('Cancel your registration?');">
+                        <button class="btn btn-outline-light">Cancel registration</button>
+                    </form>
+                {% else %}
+                    <form method="post" action="{{ path('app_event_rsvp', {id: event.id}) }}" class="d-flex gap-2 align-items-center">
+                        <div style="width:120px">
+                            <label class="form-label small mb-1">Guests</label>
+                            <input type="number" name="guests" value="1" min="1" class="form-control form-control-sm">
+                        </div>
+                        <div>
+                            <button class="btn btn-primary">Register</button>
+                        </div>
+                    </form>
+                {% endif %}
+            {% else %}
+                <div class="alert alert-info">Please <a href="{{ path('app_login') }}">login</a> to register for this event.</div>
+            {% endif %}
+        </div>
+    </div>
+</div>
+{% endblock %}

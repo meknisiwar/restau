@@ -1,0 +1,198 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Welcome — Restaurant Platform{% endblock %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    <link rel="stylesheet" href="{{ asset('css/pro_site.css') }}">
+{% endblock %}
+
+{% block body %}
+<!-- HERO -->
+<section class="hero py-5 section-reveal" style="background: linear-gradient(180deg, rgba(14,165,164,0.06), rgba(14,165,164,0.03));">
+  <div class="container">
+    <div class="row align-items-center">
+      <div class="col-lg-6">
+        <h1 class="display-4 fw-bold">Taste the difference — crafted dishes, unforgettable moments</h1>
+        <p class="lead text-muted mb-4">Inspired by the world's best kitchens, we bring seasonal flavors and thoughtful service to your table. Order online or reserve a table.</p>
+
+        <div class="d-flex gap-2 flex-wrap mb-3">
+          <a class="btn btn-lg btn-primary" href="{{ path('app_product_index') }}">Order Online</a>
+          {# Reserve CTA removed from hero — use the floating Reserve button at the corner to book a table #}
+        </div>
+
+        {# Large hero search removed — users can use the header search for quick lookup #}
+        <p class="small text-muted mb-3">Use the search in the header to quickly find dishes and drinks.</p>
+      </div>
+
+      <div class="col-lg-6 d-none d-lg-block">
+        <div class="rounded shadow-sm overflow-hidden hero-media" style="height:420px;">
+          <img src="{{ asset('images/food_bg.jpg') }}" alt="Delicious dishes" class="w-100 h-100" style="object-fit:cover;">
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FEATURES -->
+<section class="features py-5 section-reveal">
+  <div class="container">
+    <div class="row g-4 text-center">
+      <div class="col-md-4">
+        <div class="p-4 rounded shadow-sm">
+          <i class="bi bi-star display-6 text-primary"></i>
+          <h5 class="mt-3">Chef-driven menu</h5>
+          <p class="text-muted">Recipes crafted by professionals using seasonal ingredients.</p>
+        </div>
+      </div>
+      <div class="col-md-4">
+        <div class="p-4 rounded shadow-sm">
+          <i class="bi bi-clock display-6 text-primary"></i>
+          <h5 class="mt-3">On-time delivery</h5>
+          <p class="text-muted">Warm, fast and packaged with care for perfect arrives.</p>
+        </div>
+      </div>
+      <div class="col-md-4">
+        <div class="p-4 rounded shadow-sm">
+          <i class="bi bi-people display-6 text-primary"></i>
+          <h5 class="mt-3">Community & events</h5>
+          <p class="text-muted">Regular events and workshops for food lovers.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CATEGORIES -->
+<section class="categories py-5 bg-transparent section-reveal">
+  <div class="container">
+    <h2 class="mb-4">Explore categories</h2>
+    <div class="row g-3">
+      {% for category in categories %}
+      <div class="col-sm-6 col-md-4">
+        <a href="{{ path('app_product_index',{category:category.id}) }}" class="d-block category-card p-4 rounded text-decoration-none shadow-sm h-100">
+          <div class="d-flex justify-content-between align-items-start">
+            <div>
+              <h5 class="mb-1">{{ category.name }}</h5>
+              <p class="small text-muted mb-0">{{ category.description|default('Handpicked items') }}</p>
+            </div>
+            <div class="ms-3"><i class="bi bi-chevron-right fs-4 text-muted"></i></div>
+          </div>
+        </a>
+      </div>
+      {% endfor %}
+    </div>
+  </div>
+</section>
+
+<!-- CHEF'S PICKS -->
+<section class="featured py-5 section-reveal">
+  <div class="container">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+      <h2>Chef's Picks</h2>
+      <a href="{{ path('app_product_index') }}" class="text-decoration-none">View full menu</a>
+    </div>
+
+    <div class="row g-4">
+      {% for product in products|slice(0,6) %}
+      <div class="col-md-4">
+        <div class="card product-card h-100">
+          <img src="{{ product.image ?: asset('images/food_bg.jpg') }}" class="card-img-top" style="height:220px;object-fit:cover;" alt="{{ product.name }}">
+          <div class="card-body">
+            <h5 class="card-title">{{ product.name }}</h5>
+            <p class="card-text small text-muted">{{ product.description|slice(0,110) }}{% if product.description|length>110 %}...{% endif %}</p>
+          </div>
+          <div class="card-footer d-flex justify-content-between align-items-center">
+            <div>
+              <strong class="text-success">{{ product.price }}DT</strong>
+            </div>
+            <div>
+              <a href="{{ path('app_product_show',{id:product.id}) }}" class="btn btn-sm btn-outline-primary">View</a>
+            </div>
+          </div>
+        </div>
+      </div>
+      {% endfor %}
+    </div>
+  </div>
+</section>
+
+<!-- EVENTS TEASER -->
+<section class="events py-5 bg-transparent section-reveal">
+  <div class="container">
+    <div class="d-flex justify-content-between align-items-center mb-3">
+      <h2>Upcoming events</h2>
+      <a href="{{ path('app_event_index') }}" class="text-decoration-none">See all events</a>
+    </div>
+    <div class="row g-3">
+      {# simple teaser: show first two events with static placeholders; events list page has full details #}
+      <div class="col-md-6">
+        <div class="card h-100">
+          <img src="{{ asset('images/food_bg.jpg') }}" class="card-img-top" style="height:180px;object-fit:cover;" alt="Event">
+          <div class="card-body">
+            <h5 class="card-title">Mocktail Night</h5>
+            <p class="small text-muted mb-2">Dec 15 • Main Hall</p>
+            <p class="card-text small">A creative non-alcoholic mixology workshop. Learn to craft beautiful mocktails and taste along.</p>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-6">
+        <div class="card h-100">
+          <img src="{{ asset('images/food_bg.jpg') }}" class="card-img-top" style="height:180px;object-fit:cover;" alt="Event">
+          <div class="card-body">
+            <h5 class="card-title">Sunday Brunch Live Music</h5>
+            <p class="small text-muted mb-2">Dec 21 • Garden Terrace</p>
+            <p class="card-text small">Relax with live acoustic music while enjoying our Sunday brunch menu.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- TESTIMONIALS -->
+<section class="testimonials py-5 bg-transparent section-reveal">
+  <div class="container">
+    <h2 class="mb-4">What our customers say</h2>
+    <div class="row g-4">
+      <div class="col-md-4">
+        <div class="p-4 rounded shadow-sm">
+          <p class="mb-2">"Fantastic flavors and quick delivery — the pizza was perfect."</p>
+          <div class="small text-muted">— Amina</div>
+        </div>
+      </div>
+      <div class="col-md-4">
+        <div class="p-4 rounded shadow-sm">
+          <p class="mb-2">"Lovely ambiance for our anniversary dinner. Highly recommend the chef's special."</p>
+          <div class="small text-muted">— Omar</div>
+        </div>
+      </div>
+      <div class="col-md-4">
+        <div class="p-4 rounded shadow-sm">
+          <p class="mb-2">"Great mocktail workshop — learned techniques I still use at home."</p>
+          <div class="small text-muted">— Lina</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- NEWSLETTER FOOTER CTA -->
+<section class="newsletter py-5 section-reveal">
+  <div class="container">
+    <div class="row align-items-center">
+      <div class="col-md-6">
+        <h4>Get exclusive offers & updates</h4>
+        <p class="small text-muted mb-0">Subscribe to our newsletter and be the first to know about new menus and events.</p>
+      </div>
+      <div class="col-md-6">
+        <form class="d-flex gap-2 justify-content-end" method="post" action="#">
+          <input type="email" name="newsletter_email" class="form-control form-control-lg" placeholder="Your email address">
+          <button class="btn btn-primary">Subscribe</button>
+        </form>
+      </div>
+    </div>
+  </div>
+</section>
+
+{% endblock %}

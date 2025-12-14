@@ -1,0 +1,90 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Home - Restaurant Platform{% endblock %}
+
+{% block body %}
+<div class="container">
+    <!-- Hero Carousel -->
+    <div id="heroCarousel" class="carousel slide my-5" data-bs-ride="carousel">
+        <div class="carousel-inner rounded-3 shadow-sm">
+            {% for product in products|slice(0,3) %}
+            <div class="carousel-item {% if loop.first %}active{% endif %}">
+                {% set img = product.image is not empty ? product.image : asset('images/food_bg.jpg') %}
+                <img src="{{ img }}" class="d-block w-100" alt="{{ product.name }}" style="height:420px;object-fit:cover;" loading="lazy" onerror="this.onerror=null;this.src='{{ asset('images/food_bg.jpg') }}'">
+                <div class="carousel-caption d-none d-md-block bg-dark bg-opacity-50 rounded p-3">
+                    <h3>{{ product.name }}</h3>
+                    <p>{{ product.description|slice(0,120) }}{% if product.description|length > 120 %}...{% endif %}</p>
+                    <a href="{{ path('app_product_show',{id:product.id}) }}" class="btn btn-primary">View</a>
+                </div>
+            </div>
+            {% else %}
+            <div class="carousel-item active">
+                <img src="{{ asset('images/food_bg.jpg') }}" class="d-block w-100" alt="Our Menu" style="height:420px;object-fit:cover;" loading="lazy">
+                <div class="carousel-caption d-none d-md-block bg-dark bg-opacity-50 rounded p-3">
+                    <h3>Welcome to our menu</h3>
+                    <p>Discover delicious dishes and refreshing drinks.</p>
+                    <a href="{{ path('app_product_index') }}" class="btn btn-primary">Browse Menu</a>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+        <button class="carousel-control-prev" type="button" data-bs-target="#heroCarousel" data-bs-slide="prev">
+            <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+            <span class="visually-hidden">Previous</span>
+        </button>
+        <button class="carousel-control-next" type="button" data-bs-target="#heroCarousel" data-bs-slide="next">
+            <span class="carousel-control-next-icon" aria-hidden="true"></span>
+            <span class="visually-hidden">Next</span>
+        </button>
+    </div>
+
+    <!-- Categories -->
+    {% if categories is not empty %}
+    <div class="my-5">
+        <h2 class="mb-4">Categories</h2>
+        <div class="row">
+            {% for category in categories %}
+            <div class="col-md-6 mb-3">
+                <div class="card">
+                    <div class="card-body">
+                        <h5 class="card-title">{{ category.name }}</h5>
+                        <p class="card-text">{{ category.description }}</p>
+                        <a href="{{ path('app_product_index', {category: category.id}) }}" class="btn btn-outline-primary">
+                            View Products
+                        </a>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+    {% endif %}
+
+    <!-- Featured Products -->
+    {% if products is not empty %}
+    <div class="my-5">
+        <h2 class="mb-4">Featured Products</h2>
+        <div class="row">
+            {% for product in products|slice(0, 6) %}
+            <div class="col-md-4 mb-4">
+                <div class="card h-100 product-card shadow-sm">
+                    {% set fallbackFilename = (product.name|lower|replace({' ':'_','/':'_','-':'_'}) ) ~ '.jpg' %}
+                    {% set imageUrl = product.image is not empty ? product.image : asset('images/' ~ fallbackFilename) %}
+
+                    <img src="{{ imageUrl }}" class="card-img-top" alt="{{ product.name }}" style="height: 200px; object-fit: cover;" loading="lazy" onerror="this.onerror=null;this.src='{{ asset('images/food_bg.jpg') }}';">
+
+                    <div class="card-body">
+                        <h5 class="card-title">{{ product.name }}</h5>
+                        <p class="card-text">{{ product.description|slice(0, 100) }}{% if product.description|length > 100 %}...{% endif %}</p>
+                        <p class="card-text"><strong>{{ product.price }}DT</strong></p>
+                        <a href="{{ path('app_product_show', {id: product.id}) }}" class="btn btn-primary">View Details</a>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+    {% endif %}
+</div>
+{% endblock %}
+

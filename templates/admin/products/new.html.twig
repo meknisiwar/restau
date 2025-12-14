@@ -1,0 +1,87 @@
+{% extends 'admin/base.html.twig' %}
+
+{% block title %}Add New Product - Admin{% endblock %}
+
+{% block admin_content %}
+    <div class="row justify-content-center">
+        <div class="col-lg-8">
+            <h1 class="admin-page-title"><i class="bi bi-plus-circle me-2"></i>Add New Product</h1>
+            
+            <div class="card admin-card">
+                <div class="card-body">
+                    <form method="post" enctype="multipart/form-data">
+                        <div class="mb-3">
+                            <label for="name" class="form-label">Product Name *</label>
+                            <input type="text" class="form-control" id="name" name="name" required>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="description" class="form-label">Description</label>
+                            <textarea class="form-control" id="description" name="description" rows="3"></textarea>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label for="price" class="form-label">Price (DT) *</label>
+                                <input type="number" step="0.01" class="form-control" id="price" name="price" required>
+                            </div>
+
+                            <div class="col-md-6 mb-3">
+                                <label for="category" class="form-label">Category *</label>
+                                <select class="form-select" id="category" name="category" required>
+                                    <option value="">Select category...</option>
+                                    {% for category in categories %}
+                                        <option value="{{ category.id }}">{{ category.name }}</option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="image" class="form-label">Upload Image</label>
+                            <input type="file" class="form-control" id="image" name="image" accept="image/*">
+                            <small class="text-muted">Or enter a URL below</small>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="image_url" class="form-label">Image URL (alternative)</label>
+                            <input type="url" class="form-control" id="image_url" name="image_url" placeholder="https://example.com/image.jpg">
+                        </div>
+
+                        <div class="mb-3 form-check">
+                            <input type="checkbox" class="form-check-input" id="available" name="available" value="1" checked>
+                            <label class="form-check-label" for="available">
+                                Available for sale
+                            </label>
+                        </div>
+
+                        <div class="d-flex justify-content-between">
+                            <a href="{{ path('app_admin_products') }}" class="btn btn-outline-secondary">
+                                <i class="bi bi-x-circle"></i> Cancel
+                            </a>
+                            <button type="submit" class="btn btn-admin-primary">
+                                <i class="bi bi-check-circle"></i> Create Product
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+
+            <div class="card admin-card mt-3">
+                <div class="card-header">
+                    <h5 class="mb-0"><i class="bi bi-lightbulb me-2"></i>Image Tips</h5>
+                </div>
+                <div class="card-body">
+                    <p><strong>Free Image Sources:</strong></p>
+                    <ul>
+                        <li><a href="https://unsplash.com" target="_blank" class="text-primary">Unsplash</a> - High quality free images</li>
+                        <li><a href="https://www.pexels.com" target="_blank" class="text-primary">Pexels</a> - Free stock photos</li>
+                        <li><a href="https://pixabay.com" target="_blank" class="text-primary">Pixabay</a> - Free images and videos</li>
+                    </ul>
+                    <p class="mb-0"><small class="text-muted">Right-click on an image and select "Copy image address" to get the URL</small></p>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+

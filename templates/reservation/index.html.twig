@@ -1,0 +1,85 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}My Reservations{% endblock %}
+
+{% block body %}
+<div class="container my-5">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h1><i class="bi bi-calendar-check"></i> My Reservations</h1>
+        <a href="{{ path('app_reservation_new') }}" class="btn btn-primary">
+            <i class="bi bi-plus-circle"></i> New Reservation
+        </a>
+    </div>
+
+    {% if reservations is not empty %}
+    <div class="row">
+        {% for reservation in reservations %}
+        <div class="col-md-6 mb-4">
+            <div class="card">
+                <div class="card-header d-flex justify-content-between align-items-center">
+                    <span><strong>Reservation #{{ reservation.id }}</strong></span>
+                    <span class="badge 
+                        {% if reservation.status == 'pending' %}bg-warning
+                        {% elseif reservation.status == 'confirmed' %}bg-success
+                        {% elseif reservation.status == 'cancelled' %}bg-danger
+                        {% elseif reservation.status == 'completed' %}bg-secondary
+                        {% endif %}">
+                        {{ reservation.status|upper }}
+                    </span>
+                </div>
+                <div class="card-body">
+                    <p class="mb-2">
+                        <i class="bi bi-calendar"></i> 
+                        <strong>Date:</strong> {{ reservation.reservationDate|date('F d, Y') }}
+                    </p>
+                    <p class="mb-2">
+                        <i class="bi bi-clock"></i> 
+                        <strong>Time:</strong> {{ reservation.reservationDate|date('H:i') }}
+                    </p>
+                    <p class="mb-2">
+                        <i class="bi bi-people"></i> 
+                        <strong>Guests:</strong> {{ reservation.numberOfGuests }}
+                    </p>
+                    {% if reservation.tableNumber %}
+                    <p class="mb-2">
+                        <i class="bi bi-table"></i> 
+                        <strong>Table:</strong> {{ reservation.tableNumber }}
+                    </p>
+                    {% endif %}
+                    {% if reservation.specialRequests %}
+                    <p class="mb-2">
+                        <i class="bi bi-chat-left-text"></i> 
+                        <strong>Special Requests:</strong><br>
+                        {{ reservation.specialRequests }}
+                    </p>
+                    {% endif %}
+                    
+                    <div class="mt-3 d-flex gap-2">
+                        <a href="{{ path('app_reservation_show', {id: reservation.id}) }}" class="btn btn-sm btn-outline-primary">
+                            View Details
+                        </a>
+                        {% if reservation.status in ['pending', 'confirmed'] %}
+                        <form method="post" action="{{ path('app_reservation_cancel', {id: reservation.id}) }}" class="d-inline">
+                            <button type="submit" class="btn btn-sm btn-outline-danger" onclick="return confirm('Cancel this reservation?')">
+                                Cancel
+                            </button>
+                        </form>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+    {% else %}
+    <div class="alert alert-info">
+        <h4><i class="bi bi-info-circle"></i> No reservations yet</h4>
+        <p>You haven't made any reservations yet.</p>
+        <a href="{{ path('app_reservation_new') }}" class="btn btn-primary">
+            <i class="bi bi-plus-circle"></i> Make a Reservation
+        </a>
+    </div>
+    {% endif %}
+</div>
+{% endblock %}
+

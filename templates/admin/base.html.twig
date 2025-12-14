@@ -1,0 +1,379 @@
+{% extends 'base.html.twig' %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    <style>
+        .admin-wrapper {
+            display: flex;
+            min-height: calc(100vh - 200px);
+        }
+        
+        .admin-sidebar {
+            width: 260px;
+            background: linear-gradient(135deg, #0077a3 0%, #2bb7d9 100%);
+            padding: 1.5rem 0;
+            flex-shrink: 0;
+            box-shadow: 4px 0 20px rgba(0,119,163,0.15);
+        }
+        
+        .admin-sidebar .nav-link {
+            color: rgba(255,255,255,0.85);
+            padding: 0.75rem 1.5rem;
+            border-left: 3px solid transparent;
+            transition: all 0.2s ease;
+            font-weight: 500;
+        }
+        
+        .admin-sidebar .nav-link:hover {
+            background: rgba(255,255,255,0.15);
+            color: #fff;
+            border-left-color: #fff;
+        }
+        
+        .admin-sidebar .nav-link.active {
+            background: rgba(255,255,255,0.2);
+            color: #fff;
+            border-left-color: #fff;
+        }
+        
+        .admin-sidebar .nav-link i {
+            width: 24px;
+            margin-right: 10px;
+        }
+        
+        .admin-sidebar-header {
+            padding: 0 1.5rem 1rem;
+            border-bottom: 1px solid rgba(255,255,255,0.15);
+            margin-bottom: 1rem;
+        }
+        
+        .admin-sidebar-header h5 {
+            color: #fff;
+            margin: 0;
+            font-weight: 700;
+        }
+        
+        .admin-sidebar-header small {
+            color: rgba(255,255,255,0.7);
+        }
+        
+        .admin-content {
+            flex: 1;
+            padding: 2rem;
+            background: linear-gradient(180deg, #f6fbfb, #e6f7f9);
+        }
+        
+        .admin-card {
+            border: none;
+            border-radius: 12px;
+            box-shadow: 0 2px 12px rgba(0,119,163,0.08);
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+            background: #fff;
+        }
+        
+        .admin-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 20px rgba(0,119,163,0.12);
+        }
+        
+        .stat-card {
+            position: relative;
+            overflow: hidden;
+            border-radius: 12px;
+        }
+        
+        .stat-card::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            right: -50%;
+            width: 100%;
+            height: 100%;
+            background: rgba(255,255,255,0.1);
+            border-radius: 50%;
+        }
+        
+        .stat-card.bg-primary {
+            background: linear-gradient(135deg, #0077a3 0%, #2bb7d9 100%) !important;
+        }
+        
+        .stat-card.bg-success {
+            background: linear-gradient(135deg, #0d9488 0%, #2dd4bf 100%) !important;
+        }
+        
+        .stat-card.bg-info {
+            background: linear-gradient(135deg, #0284c7 0%, #38bdf8 100%) !important;
+        }
+        
+        .stat-card.bg-warning {
+            background: linear-gradient(135deg, #d97706 0%, #fbbf24 100%) !important;
+        }
+        
+        .stat-card.bg-danger {
+            background: linear-gradient(135deg, #dc2626 0%, #f87171 100%) !important;
+        }
+        
+        .stat-card.bg-purple {
+            background: linear-gradient(135deg, #7c3aed 0%, #a78bfa 100%) !important;
+        }
+        
+        .stat-icon {
+            font-size: 2.5rem;
+            opacity: 0.8;
+        }
+        
+        .stat-number {
+            font-size: 2rem;
+            font-weight: 700;
+        }
+        
+        .activity-item {
+            padding: 1rem;
+            border-bottom: 1px solid rgba(0,119,163,0.08);
+            transition: background 0.2s ease;
+        }
+        
+        .activity-item:hover {
+            background: rgba(0,119,163,0.03);
+        }
+        
+        .activity-item:last-child {
+            border-bottom: none;
+        }
+        
+        .badge-status-pending { background: linear-gradient(135deg, #d97706, #fbbf24); color: #000; }
+        .badge-status-confirmed { background: linear-gradient(135deg, #0077a3, #2bb7d9); }
+        .badge-status-preparing { background: linear-gradient(135deg, #7c3aed, #a78bfa); }
+        .badge-status-ready { background: linear-gradient(135deg, #0d9488, #2dd4bf); }
+        .badge-status-delivered { background: linear-gradient(135deg, #059669, #34d399); }
+        .badge-status-cancelled { background: linear-gradient(135deg, #dc2626, #f87171); }
+        .badge-status-completed { background: linear-gradient(135deg, #0d9488, #2dd4bf); }
+        
+        .quick-action-btn {
+            padding: 1rem;
+            border-radius: 10px;
+            text-align: center;
+            transition: all 0.2s ease;
+            text-decoration: none;
+            display: block;
+        }
+        
+        .quick-action-btn:hover {
+            transform: translateY(-3px);
+        }
+        
+        .quick-action-btn i {
+            font-size: 2rem;
+            display: block;
+            margin-bottom: 0.5rem;
+        }
+        
+        .admin-page-title {
+            color: #053842;
+            font-weight: 700;
+            margin-bottom: 1.5rem;
+        }
+        
+        .admin-page-title i {
+            color: #0077a3;
+        }
+        
+        .card-header {
+            background: linear-gradient(135deg, rgba(0,119,163,0.05) 0%, rgba(43,183,217,0.05) 100%);
+            border-bottom: 1px solid rgba(0,119,163,0.1);
+            font-weight: 600;
+            color: #053842;
+        }
+        
+        .table th {
+            background: linear-gradient(135deg, rgba(0,119,163,0.05) 0%, rgba(43,183,217,0.05) 100%);
+            color: #053842;
+            font-weight: 600;
+            border-bottom: 2px solid rgba(0,119,163,0.15);
+        }
+        
+        .table td {
+            vertical-align: middle;
+        }
+        
+        .btn-admin-primary {
+            background: linear-gradient(135deg, #0077a3 0%, #2bb7d9 100%);
+            border: none;
+            color: #fff;
+            border-radius: 8px;
+            padding: 0.5rem 1rem;
+            transition: all 0.2s ease;
+        }
+        
+        .btn-admin-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0,119,163,0.3);
+            color: #fff;
+        }
+
+        @media (max-width: 991px) {
+            .admin-wrapper {
+                flex-direction: column;
+            }
+            
+            .admin-sidebar {
+                width: 100%;
+                padding: 1rem 0;
+            }
+            
+            .admin-sidebar .nav {
+                display: flex;
+                flex-wrap: wrap;
+                justify-content: center;
+            }
+            
+            .admin-sidebar .nav-link {
+                padding: 0.5rem 1rem;
+                border-left: none;
+                border-bottom: 3px solid transparent;
+            }
+                  .admin-sidebar .nav-link:hover,
+            .admin-sidebar .nav-link.active {
+                border-left: none;
+                border-bottom-color: #fff;
+            }
+        }
+
+        /* Shared detail page styles */
+        .card-header-gradient {
+            background: linear-gradient(135deg, #0077a3 0%, #2bb7d9 100%);
+            color: white;
+            padding: 1rem 1.25rem;
+            border-radius: 12px 12px 0 0;
+        }
+        
+        .detail-item {
+            margin-bottom: 0.5rem;
+        }
+        
+        .detail-item label {
+            display: block;
+            margin-bottom: 0.25rem;
+            font-size: 0.75rem;
+            letter-spacing: 0.5px;
+        }
+        
+        .avatar-circle {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #0077a3 0%, #2bb7d9 100%);
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 600;
+            font-size: 1.1rem;
+        }
+          .text-primary {
+            color: #0077a3 !important;
+        }
+        
+        /* Utility badge classes */
+        .badge-primary-gradient {
+            background: linear-gradient(135deg, #0077a3, #2bb7d9) !important;
+            color: white;
+        }
+        
+        .badge-danger-gradient {
+            background: linear-gradient(135deg, #dc2626, #f87171) !important;
+            color: white;
+        }
+          .tr-light-gradient {
+            background: linear-gradient(135deg, rgba(0,119,163,0.05) 0%, rgba(43,183,217,0.05) 100%) !important;
+        }
+        
+        .d-inline-form {
+            display: inline !important;
+        }
+    </style>
+{% endblock %}
+
+{% block body %}
+<div class="admin-wrapper">
+    <!-- Admin Sidebar -->
+    <aside class="admin-sidebar">
+        <div class="admin-sidebar-header">
+            <h5><i class="bi bi-shield-lock"></i> Admin Panel</h5>
+            <small>{{ app.user.email }}</small>
+        </div>
+        
+        <nav class="nav flex-column">
+            <a class="nav-link {{ app.request.get('_route') == 'app_admin_dashboard' ? 'active' : '' }}" href="{{ path('app_admin_dashboard') }}">
+                <i class="bi bi-speedometer2"></i> Dashboard
+            </a>
+            <a class="nav-link {{ app.request.get('_route') starts with 'app_admin_product' ? 'active' : '' }}" href="{{ path('app_admin_products') }}">
+                <i class="bi bi-box-seam"></i> Products
+            </a>
+            <a class="nav-link {{ app.request.get('_route') starts with 'app_admin_order' ? 'active' : '' }}" href="{{ path('app_admin_orders') }}">
+                <i class="bi bi-cart-check"></i> Orders
+            </a>
+            <a class="nav-link {{ app.request.get('_route') starts with 'app_admin_reservation' ? 'active' : '' }}" href="{{ path('app_admin_reservations') }}">
+                <i class="bi bi-calendar-check"></i> Reservations
+            </a>
+            <a class="nav-link {{ app.request.get('_route') starts with 'app_admin_user' ? 'active' : '' }}" href="{{ path('app_admin_users') }}">
+                <i class="bi bi-people"></i> Users
+            </a>
+            <hr class="mx-3 my-2" style="border-color: rgba(255,255,255,0.2);">
+            <a class="nav-link" href="{{ path('app_home') }}">
+                <i class="bi bi-house"></i> Back to Site
+            </a>
+        </nav>
+    </aside>
+      <!-- Admin Content -->
+    <main class="admin-content">
+        {% block admin_content %}{% endblock %}
+    </main>
+</div>
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    <script>
+        // Shared admin functionality
+        document.addEventListener('DOMContentLoaded', function() {
+            // Add confirmation to all delete forms
+            document.querySelectorAll('form[action*="delete"]').forEach(function(form) {
+                form.addEventListener('submit', function(e) {
+                    if (!confirm('Are you sure you want to delete this item?')) {
+                        e.preventDefault();
+                    }
+                });
+            });
+            
+            // Add loading state to buttons on form submit
+            document.querySelectorAll('form').forEach(function(form) {
+                form.addEventListener('submit', function() {
+                    const submitBtn = form.querySelector('button[type="submit"]');
+                    if (submitBtn) {
+                        submitBtn.disabled = true;
+                        const originalText = submitBtn.innerHTML;
+                        submitBtn.innerHTML = '<i class="bi bi-arrow-clockwise spin"></i> Processing...';
+                        
+                        // Re-enable after 3 seconds in case of error
+                        setTimeout(function() {
+                            submitBtn.disabled = false;
+                            submitBtn.innerHTML = originalText;
+                        }, 3000);
+                    }
+                });
+            });
+        });
+    </script>
+    
+    <style>
+        .spin {
+            animation: spin 1s linear infinite;
+        }
+        
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+    </style>
+{% endblock %}

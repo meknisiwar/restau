@@ -1,0 +1,97 @@
+{% extends 'admin/base.html.twig' %}
+
+{% block title %}Manage Orders - Admin{% endblock %}
+
+{% block admin_content %}
+    <h1 class="admin-page-title"><i class="bi bi-cart-check me-2"></i>Manage Orders</h1>
+
+    {% for message in app.flashes('success') %}
+        <div class="alert alert-success alert-dismissible fade show" role="alert">
+            {{ message }}
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        </div>
+    {% endfor %}
+
+    <div class="card admin-card mb-3">
+        <div class="card-body">
+            <div class="btn-group flex-wrap" role="group">
+                <a href="{{ path('app_admin_orders') }}" class="btn btn-outline-primary {% if not selectedStatus %}active{% endif %}">
+                    All Orders
+                </a>
+                <a href="{{ path('app_admin_orders', {status: 'pending'}) }}" class="btn btn-outline-warning {% if selectedStatus == 'pending' %}active{% endif %}">
+                    Pending
+                </a>
+                <a href="{{ path('app_admin_orders', {status: 'confirmed'}) }}" class="btn btn-outline-info {% if selectedStatus == 'confirmed' %}active{% endif %}">
+                    Confirmed
+                </a>
+                <a href="{{ path('app_admin_orders', {status: 'preparing'}) }}" class="btn btn-outline-secondary {% if selectedStatus == 'preparing' %}active{% endif %}">
+                    Preparing
+                </a>
+                <a href="{{ path('app_admin_orders', {status: 'delivered'}) }}" class="btn btn-outline-success {% if selectedStatus == 'delivered' %}active{% endif %}">
+                    Delivered
+                </a>
+                <a href="{{ path('app_admin_orders', {status: 'cancelled'}) }}" class="btn btn-outline-danger {% if selectedStatus == 'cancelled' %}active{% endif %}">
+                    Cancelled
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <div class="card admin-card">
+        <div class="card-body p-0">
+            <div class="table-responsive">
+                <table class="table table-hover mb-0">
+                    <thead>
+                        <tr>
+                            <th>Order #</th>
+                            <th>Customer</th>
+                            <th>Date</th>
+                            <th>Total</th>
+                            <th>Status</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for order in orders %}
+                        <tr>
+                            <td><strong>#{{ order.id }}</strong></td>
+                            <td>{{ order.user.firstName }} {{ order.user.lastName }}</td>
+                            <td>{{ order.createdAt|date('M d, Y H:i') }}</td>
+                            <td><strong class="text-primary">{{ order.totalAmount|number_format(2) }} DT</strong></td>
+                            <td>
+                                <span class="badge badge-status-{{ order.status }}">
+                                    {{ order.status|capitalize }}
+                                </span>
+                            </td>
+                            <td>
+                                <div class="btn-group" role="group">
+                                    <a href="{{ path('app_admin_order_show', {id: order.id}) }}" class="btn btn-sm btn-outline-primary">
+                                        <i class="bi bi-eye"></i>
+                                    </a>
+                                    <form method="post" action="{{ path('app_admin_order_delete', {id: order.id}) }}" class="d-inline-form">
+                                        <button type="submit" class="btn btn-sm btn-outline-danger">
+                                            <i class="bi bi-trash"></i>
+                                        </button>
+                                    </form>
+                                </div>
+                            </td>
+                        </tr>
+                        {% else %}
+                        <tr>
+                            <td colspan="6" class="text-center text-muted py-4">
+                                <i class="bi bi-inbox fs-1 d-block mb-2"></i>
+                                No orders found.
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <div class="mt-3">
+        <small class="text-muted">Total orders: {{ orders|length }}</small>
+    </div>
+{% endblock %}
+

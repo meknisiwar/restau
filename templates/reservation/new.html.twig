@@ -1,0 +1,51 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}New Reservation{% endblock %}
+
+{% block body %}
+<div class="container my-5">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="card">
+                <div class="card-header">
+                    <h3><i class="bi bi-calendar-plus"></i> Make a Reservation</h3>
+                </div>
+                <div class="card-body">
+                    {{ form_start(form) }}
+                        <div class="mb-3">
+                            {{ form_label(form.reservationDate) }}
+                            {{ form_widget(form.reservationDate) }}
+                            {{ form_errors(form.reservationDate) }}
+                        </div>
+
+                        <div class="mb-3">
+                            {{ form_label(form.numberOfGuests) }}
+                            {{ form_widget(form.numberOfGuests) }}
+                            {{ form_errors(form.numberOfGuests) }}
+                        </div>
+
+                        <div class="mb-3">
+                            {{ form_label(form.specialRequests) }}
+                            {{ form_widget(form.specialRequests) }}
+                            {{ form_errors(form.specialRequests) }}
+                            <small class="form-text text-muted">
+                                Let us know if you have any dietary restrictions or special occasions.
+                            </small>
+                        </div>
+
+                        <div class="d-flex gap-2">
+                            <button type="submit" class="btn btn-primary">
+                                <i class="bi bi-check-circle"></i> Submit Reservation
+                            </button>
+                            <a href="{{ path('app_reservation_index') }}" class="btn btn-secondary">
+                                Cancel
+                            </a>
+                        </div>
+                    {{ form_end(form) }}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+

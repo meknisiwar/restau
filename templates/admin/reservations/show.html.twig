@@ -1,0 +1,127 @@
+{% extends 'admin/base.html.twig' %}
+
+{% block title %}Reservation #{{ reservation.id }} - Admin{% endblock %}
+
+{% block admin_content %}
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h2 class="mb-0"><i class="bi bi-calendar-event me-2"></i>Reservation #{{ reservation.id }}</h2>
+    <a href="{{ path('app_admin_reservations') }}" class="btn btn-outline-secondary">
+        <i class="bi bi-arrow-left me-1"></i> Back to Reservations
+    </a>
+</div>
+
+{% for message in app.flashes('success') %}
+    <div class="alert alert-success alert-dismissible fade show" role="alert">
+        <i class="bi bi-check-circle me-2"></i>{{ message }}
+        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+    </div>
+{% endfor %}
+
+<div class="row">
+    <div class="col-lg-8">
+        <div class="admin-card mb-4">
+            <div class="card-header-gradient">
+                <h5 class="mb-0"><i class="bi bi-info-circle me-2"></i>Reservation Details</h5>
+            </div>
+            <div class="card-body p-4">
+                <div class="row">
+                    <div class="col-md-6 mb-3">
+                        <div class="detail-item">
+                            <label class="text-muted small fw-semibold text-uppercase">Date & Time</label>
+                            <p class="mb-0 fs-5"><i class="bi bi-calendar3 me-2 text-primary"></i>{{ reservation.reservationDate|date('F d, Y') }}</p>
+                            <p class="mb-0 fs-5"><i class="bi bi-clock me-2 text-primary"></i>{{ reservation.reservationDate|date('H:i') }}</p>
+                        </div>
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        <div class="detail-item">
+                            <label class="text-muted small fw-semibold text-uppercase">Number of Guests</label>
+                            <p class="mb-0 fs-5"><i class="bi bi-people me-2 text-primary"></i>{{ reservation.numberOfGuests }} {{ reservation.numberOfGuests == 1 ? 'Guest' : 'Guests' }}</p>
+                        </div>
+                    </div>
+                    {% if reservation.tableNumber %}
+                    <div class="col-md-6 mb-3">
+                        <div class="detail-item">
+                            <label class="text-muted small fw-semibold text-uppercase">Table Number</label>
+                            <p class="mb-0 fs-5"><i class="bi bi-hash me-2 text-primary"></i>Table {{ reservation.tableNumber }}</p>
+                        </div>
+                    </div>
+                    {% endif %}
+                    <div class="col-md-6 mb-3">
+                        <div class="detail-item">
+                            <label class="text-muted small fw-semibold text-uppercase">Status</label>
+                            <p class="mb-0">
+                                <span class="badge-status-{{ reservation.status }}">
+                                    {{ reservation.status|upper }}
+                                </span>
+                            </p>
+                        </div>
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        <div class="detail-item">
+                            <label class="text-muted small fw-semibold text-uppercase">Created</label>
+                            <p class="mb-0"><i class="bi bi-calendar-plus me-2 text-muted"></i>{{ reservation.createdAt|date('F d, Y H:i') }}</p>
+                        </div>
+                    </div>
+                </div>
+
+                {% if reservation.specialRequests %}
+                    <hr class="my-4">
+                    <div class="detail-item">
+                        <label class="text-muted small fw-semibold text-uppercase">Special Requests</label>
+                        <div class="alert alert-light border-start border-4 border-info mt-2 mb-0">
+                            <i class="bi bi-chat-left-quote me-2 text-info"></i>{{ reservation.specialRequests }}
+                        </div>
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+
+    <div class="col-lg-4">
+        <div class="admin-card mb-4">
+            <div class="card-header-gradient">
+                <h5 class="mb-0"><i class="bi bi-person me-2"></i>Customer Info</h5>
+            </div>
+            <div class="card-body p-4">
+                <div class="d-flex align-items-center mb-3">
+                    <div class="avatar-circle me-3">
+                        {{ reservation.user.firstName|first|upper }}{{ reservation.user.lastName|first|upper }}
+                    </div>
+                    <div>
+                        <h6 class="mb-0">{{ reservation.user.firstName }} {{ reservation.user.lastName }}</h6>
+                        <small class="text-muted">Customer</small>
+                    </div>
+                </div>
+                <hr>
+                <p class="mb-2"><i class="bi bi-envelope me-2 text-primary"></i>{{ reservation.user.email }}</p>
+                {% if reservation.user.phone %}
+                    <p class="mb-0"><i class="bi bi-telephone me-2 text-primary"></i>{{ reservation.user.phone }}</p>
+                {% endif %}
+            </div>
+        </div>
+
+        <div class="admin-card">
+            <div class="card-header-gradient">
+                <h5 class="mb-0"><i class="bi bi-gear me-2"></i>Update Status</h5>
+            </div>
+            <div class="card-body p-4">
+                <form method="post" action="{{ path('app_admin_reservation_status', {id: reservation.id}) }}">
+                    <div class="mb-3">
+                        <label class="form-label text-muted small fw-semibold text-uppercase">New Status</label>
+                        <select name="status" class="form-select">
+                            <option value="pending" {% if reservation.status == 'pending' %}selected{% endif %}>🕐 Pending</option>
+                            <option value="confirmed" {% if reservation.status == 'confirmed' %}selected{% endif %}>✅ Confirmed</option>
+                            <option value="completed" {% if reservation.status == 'completed' %}selected{% endif %}>🎉 Completed</option>
+                            <option value="cancelled" {% if reservation.status == 'cancelled' %}selected{% endif %}>❌ Cancelled</option>
+                        </select>
+                    </div>
+                    <button type="submit" class="btn btn-admin-primary w-100">
+                        <i class="bi bi-check-circle me-1"></i> Update Status
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+

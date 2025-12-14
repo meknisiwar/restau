@@ -1,0 +1,37 @@
+/* This file defines the styles for the header on your homepage. 
+    Make sure your image (e.g., food-drink-bg.jpg) is in the 
+    public/images/ folder. The URL is relative to the CSS file's location,
+    but it's generally best practice to keep all styles here and let 
+    Symfony handle the paths if needed, though a simple relative path 
+    from the CSS to the image in another public folder often works.
+    The path '../images/...' assumes the CSS is in 'public/css/' 
+    and the image is in 'public/images/'.
+*/
+
+.home-header {
+    position: relative;
+    height: 100vh;
+    
+    /* Change the URL below to point to your image file */
+    background-image: url('../images/food_bg.jpg'); 
+    
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+}
+
+.home-header .overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.4); /* Dark overlay for text contrast */
+    z-index: 1;
+}
+
+.home-header h1,
+.home-header p,
+.home-header a {
+    z-index: 2; /* Ensure text and button are above the overlay */
+}

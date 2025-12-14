@@ -1,0 +1,11 @@
+/* filepath: public/css/pro_site.css */
+
+.hero { background: linear-gradient(180deg, #fff, #f8fbff); }
+.hero .display-5 { color: #111827; }
+
+.category-card { transition: transform .18s ease, box-shadow .18s ease; background: linear-gradient(180deg,#fff,#fbfdff); }
+.category-card:hover { transform: translateY(-6px); box-shadow: 0 10px 30px rgba(16,24,40,.08); }
+
+.featured .card { border: none; }
+
+.cta .btn-primary { background: linear-gradient(180deg,#ff6b00,#ff4d00); border: none; }
