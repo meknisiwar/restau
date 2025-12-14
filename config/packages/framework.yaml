@@ -12,6 +12,10 @@ framework:
         cookie_secure: auto
         cookie_samesite: lax
 
+    # Default locale configuration
+    default_locale: en
+    enabled_locales: ['en', 'fr', 'ar']
+
     #esi: true
     #fragments: true
     php_errors:
