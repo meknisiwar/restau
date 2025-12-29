@@ -16,9 +16,7 @@ class Rsvp
 
     #[ORM\ManyToOne(targetEntity: User::class)]
     #[ORM\JoinColumn(nullable: false, onDelete: 'CASCADE')]
-    private ?User $user = null;
-
-    #[ORM\ManyToOne(targetEntity: Event::class)]
+    private ?User $user = null;    #[ORM\ManyToOne(targetEntity: Event::class, inversedBy: 'rsvps')]
     #[ORM\JoinColumn(nullable: false, onDelete: 'CASCADE')]
     private ?Event $event = null;
 

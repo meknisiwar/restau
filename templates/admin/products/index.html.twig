@@ -51,7 +51,7 @@
                                     <span class="text-muted">No category</span>
                                 {% endif %}
                             </td>
-                            <td><strong class="text-primary">{{ product.price|number_format(2) }} DT</strong></td>
+                            <td><strong class="text-primary">{{ product.price|number_format(0) }} DT</strong></td>
                             <td>
                                 <form method="post" action="{{ path('app_admin_product_toggle', {id: product.id}) }}" class="d-inline-form">
                                     <button type="submit" class="btn btn-sm {{ product.available ? 'btn-success' : 'btn-secondary' }}">

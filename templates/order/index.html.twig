@@ -33,7 +33,7 @@
                             <h6>Items:</h6>
                             <ul class="list-unstyled">
                                 {% for item in order.orderItems %}
-                                <li>{{ item.quantity }}x {{ item.productName }} - ${{ item.price }}</li>
+                                <li>{{ item.quantity }}x {{ item.productName }} - {{ item.price|number_format(0) }} DT</li>
                                 {% endfor %}
                             </ul>
                             <p class="mb-1"><strong>Delivery Address:</strong> {{ order.deliveryAddress }}</p>
@@ -43,7 +43,7 @@
                             {% endif %}
                         </div>
                         <div class="col-md-4 text-end">
-                            <h4 class="text-success">Total: ${{ order.totalAmount }}</h4>
+                            <h4 class="text-success">Total: {{ order.totalAmount|number_format(0) }} DT</h4>
                             <a href="{{ path('app_order_show', {id: order.id}) }}" class="btn btn-outline-primary">
                                 View Details
                             </a>

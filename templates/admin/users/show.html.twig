@@ -62,7 +62,7 @@
                                     <tr>
                                         <td><a href="{{ path('app_admin_order_show', {id: order.id}) }}" class="text-primary">#{{ order.id }}</a></td>
                                         <td>{{ order.createdAt|date('M d, Y') }}</td>
-                                        <td><strong class="text-primary">{{ order.totalAmount|number_format(2) }} DT</strong></td>
+                                        <td><strong class="text-primary">{{ order.totalAmount|number_format(0) }} DT</strong></td>
                                         <td><span class="badge badge-status-{{ order.status }}">{{ order.status|capitalize }}</span></td>
                                     </tr>
                                     {% endfor %}

@@ -1,5 +1,9 @@
 twig:
     file_name_pattern: '*.twig'
+    # Protection XSS - Auto-escaping activé
+    autoescape: 'html'
+    # Variables strictes pour éviter les erreurs
+    strict_variables: '%kernel.debug%'
 
 when@test:
     twig:

@@ -39,7 +39,7 @@
                     <p class="card-text flex-grow-1">{{ product.description|slice(0, 100) }}{% if product.description|length > 100 %}...{% endif %}</p>
                     <div class="mt-auto">
                         <p class="card-text mb-2">
-                            <strong class="text-success">{{ product.price }}DT</strong>
+                            <strong class="text-success">{{ product.price|number_format(0) }} DT</strong>
                             {% if not product.available %}
                                 <span class="badge bg-danger">Out of Stock</span>
                             {% endif %}

@@ -2,9 +2,11 @@
 
 namespace App\Controller\Admin;
 
+use App\Repository\EventRepository;
 use App\Repository\OrderRepository;
 use App\Repository\ProductRepository;
 use App\Repository\ReservationRepository;
+use App\Repository\RsvpRepository;
 use App\Repository\UserRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
@@ -20,7 +22,9 @@ class DashboardController extends AbstractController
         UserRepository $userRepository,
         ProductRepository $productRepository,
         OrderRepository $orderRepository,
-        ReservationRepository $reservationRepository
+        ReservationRepository $reservationRepository,
+        EventRepository $eventRepository,
+        RsvpRepository $rsvpRepository
     ): Response {
         // Get all orders and calculate revenue
         $allOrders = $orderRepository->findAll();
@@ -44,6 +48,9 @@ class DashboardController extends AbstractController
             'pending_orders' => count($orderRepository->findByStatus('pending')),
             'total_reservations' => count($reservationRepository->findAll()),
             'upcoming_reservations' => count($reservationRepository->findUpcomingReservations()),
+            'total_events' => count($eventRepository->findAll()),
+            'upcoming_events' => count($eventRepository->findUpcoming()),
+            'total_rsvps' => count($rsvpRepository->findAll()),
             'total_revenue' => $totalRevenue,
             'today_revenue' => $todayRevenue,
         ];
@@ -54,13 +61,21 @@ class DashboardController extends AbstractController
         // Get upcoming reservations (next 5)
         $upcomingReservations = $reservationRepository->findUpcomingReservations(5);
         
+        // Get upcoming events (next 5)
+        $upcomingEvents = $eventRepository->findUpcoming(5);
+        
         // Get recent users (last 5)
         $recentUsers = $userRepository->findBy([], ['id' => 'DESC'], 5);
+        
+        // Get recent RSVPs (last 5)
+        $recentRsvps = $rsvpRepository->findBy([], ['createdAt' => 'DESC'], 5);
 
         return $this->render('admin/dashboard.html.twig', [
             'stats' => $stats,
             'recentOrders' => $recentOrders,
             'upcomingReservations' => $upcomingReservations,
+            'upcomingEvents' => $upcomingEvents,
+            'recentRsvps' => $recentRsvps,
             'recentUsers' => $recentUsers,
         ]);
     }

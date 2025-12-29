@@ -64,12 +64,42 @@ class OrderController extends AbstractController
         }
 
         if ($request->isMethod('POST')) {
+            // Validation CSRF
+            $token = $request->request->get('_token');
+            if (!$this->isCsrfTokenValid('order_checkout', $token)) {
+                $this->addFlash('error', 'Invalid security token. Please try again.');
+                return $this->redirectToRoute('app_order_checkout');
+            }
+
+            // Validation et assainissement des entrées
+            $deliveryAddress = trim(strip_tags($request->request->get('delivery_address', '')));
+            $phone = trim(strip_tags($request->request->get('phone', '')));
+            $notes = trim(strip_tags($request->request->get('notes', '')));
+            
+            // Validation des champs obligatoires
+            if (empty($deliveryAddress) || empty($phone)) {
+                $this->addFlash('error', 'Delivery address and phone are required.');
+                return $this->redirectToRoute('app_order_checkout');
+            }
+
+            // Validation du format du téléphone
+            if (!preg_match('/^[\+]?[\d\s\-\(\)]{8,20}$/', $phone)) {
+                $this->addFlash('error', 'Invalid phone number format.');
+                return $this->redirectToRoute('app_order_checkout');
+            }
+
+            // Limitation de la longueur des notes
+            if (strlen($notes) > 500) {
+                $this->addFlash('error', 'Notes cannot exceed 500 characters.');
+                return $this->redirectToRoute('app_order_checkout');
+            }
+
             $order = new Order();
             $order->setUser($user);
             $order->setStatus(Order::STATUS_PENDING);
-            $order->setDeliveryAddress($request->request->get('delivery_address') ?? $user->getAddress());
-            $order->setPhone($request->request->get('phone') ?? $user->getPhone());
-            $order->setNotes($request->request->get('notes'));
+            $order->setDeliveryAddress($deliveryAddress);
+            $order->setPhone($phone);
+            $order->setNotes($notes);
 
             // coupon handling
             $couponCode = $request->request->get('coupon_code');
@@ -122,9 +152,8 @@ class OrderController extends AbstractController
 
             // loyalty points: give 1 point per 10 DT spent
             $points = floor((float)$order->getTotalAmount() / 10);
-            if (method_exists($user, 'setLoyaltyPoints')) {
-                $existing = $user->loyaltyPoints ?? 0;
-                $user->loyaltyPoints = $existing + $points;
+            if (method_exists($user, 'addLoyaltyPoints')) {
+                $user->addLoyaltyPoints($points);
                 $this->entityManager->persist($user);
             }
 

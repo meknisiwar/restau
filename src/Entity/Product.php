@@ -20,15 +20,17 @@ class Product
     #[ORM\Column(length: 255)]
     #[Assert\NotBlank(message: 'Product name is required')]
     #[Assert\Length(min: 2, max: 255, minMessage: 'Name must be at least {{ limit }} characters')]
+    #[Assert\Regex(pattern: '/^[a-zA-Z0-9\s\-_àáâãäåæçèéêëìíîïðñòóôõöøùúûüýþÿ]+$/u', message: 'Product name contains invalid characters')]
     private ?string $name = null;
 
     #[ORM\Column(type: 'text', nullable: true)]
+    #[Assert\Length(max: 1000, maxMessage: 'Description cannot exceed {{ limit }} characters')]
     private ?string $description = null;
 
-    #[ORM\Column(type: Types::DECIMAL, precision: 10, scale: 2)]
+    #[ORM\Column(type: Types::INTEGER)]
     #[Assert\NotBlank(message: 'Price is required')]
     #[Assert\Positive(message: 'Price must be positive')]
-    private ?string $price = null;
+    private ?int $price = null;
 
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $image = null;
@@ -100,12 +102,12 @@ class Product
         return $this;
     }
 
-    public function getPrice(): ?string
+    public function getPrice(): ?int
     {
         return $this->price;
     }
 
-    public function setPrice(string $price): static
+    public function setPrice(int $price): static
     {
         $this->price = $price;
         return $this;

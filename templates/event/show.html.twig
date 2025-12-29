@@ -21,15 +21,15 @@
                 </div>
             </div>
 
-            <p class="mt-3">{{ event.description }}</p>
-
-            {% if is_granted('ROLE_USER') %}
+            <p class="mt-3">{{ event.description }}</p>            {% if is_granted('ROLE_USER') %}
                 {% if userRsvp %}
                     <form method="post" action="{{ path('app_event_rsvp_cancel', {id: event.id}) }}" onsubmit="return confirm('Cancel your registration?');">
+                        <input type="hidden" name="_token" value="{{ csrf_token('cancel_rsvp_' ~ event.id) }}">
                         <button class="btn btn-outline-light">Cancel registration</button>
                     </form>
                 {% else %}
                     <form method="post" action="{{ path('app_event_rsvp', {id: event.id}) }}" class="d-flex gap-2 align-items-center">
+                        <input type="hidden" name="_token" value="{{ csrf_token('event_rsvp_' ~ event.id) }}">
                         <div style="width:120px">
                             <label class="form-label small mb-1">Guests</label>
                             <input type="number" name="guests" value="1" min="1" class="form-control form-control-sm">

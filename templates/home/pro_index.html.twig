@@ -102,9 +102,8 @@
             <h5 class="card-title">{{ product.name }}</h5>
             <p class="card-text small text-muted">{{ product.description|slice(0,110) }}{% if product.description|length>110 %}...{% endif %}</p>
           </div>
-          <div class="card-footer d-flex justify-content-between align-items-center">
-            <div>
-              <strong class="text-success">{{ product.price }}DT</strong>
+          <div class="card-footer d-flex justify-content-between align-items-center">            <div>
+              <strong class="text-success">{{ product.price|number_format(0) }} DT</strong>
             </div>
             <div>
               <a href="{{ path('app_product_show',{id:product.id}) }}" class="btn btn-sm btn-outline-primary">View</a>
@@ -131,7 +130,7 @@
           <img src="{{ asset('images/food_bg.jpg') }}" class="card-img-top" style="height:180px;object-fit:cover;" alt="Event">
           <div class="card-body">
             <h5 class="card-title">Mocktail Night</h5>
-            <p class="small text-muted mb-2">Dec 15 • Main Hall</p>
+            <p class="small text-muted mb-2">Dec 31 • Main Hall</p>
             <p class="card-text small">A creative non-alcoholic mixology workshop. Learn to craft beautiful mocktails and taste along.</p>
           </div>
         </div>
@@ -141,7 +140,7 @@
           <img src="{{ asset('images/food_bg.jpg') }}" class="card-img-top" style="height:180px;object-fit:cover;" alt="Event">
           <div class="card-body">
             <h5 class="card-title">Sunday Brunch Live Music</h5>
-            <p class="small text-muted mb-2">Dec 21 • Garden Terrace</p>
+            <p class="small text-muted mb-2">Jan 5 • Garden Terrace</p>
             <p class="card-text small">Relax with live acoustic music while enjoying our Sunday brunch menu.</p>
           </div>
         </div>
@@ -178,21 +177,4 @@
 </section>
 
 <!-- NEWSLETTER FOOTER CTA -->
-<section class="newsletter py-5 section-reveal">
-  <div class="container">
-    <div class="row align-items-center">
-      <div class="col-md-6">
-        <h4>Get exclusive offers & updates</h4>
-        <p class="small text-muted mb-0">Subscribe to our newsletter and be the first to know about new menus and events.</p>
-      </div>
-      <div class="col-md-6">
-        <form class="d-flex gap-2 justify-content-end" method="post" action="#">
-          <input type="email" name="newsletter_email" class="form-control form-control-lg" placeholder="Your email address">
-          <button class="btn btn-primary">Subscribe</button>
-        </form>
-      </div>
-    </div>
-  </div>
-</section>
-
 {% endblock %}

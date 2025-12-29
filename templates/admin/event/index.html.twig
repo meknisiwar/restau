@@ -1,0 +1,78 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Admin - Events{% endblock %}
+
+{% block body %}
+<div class="container my-5">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h1>Events Management</h1>
+        <div>
+            <a href="{{ path('app_admin_dashboard') }}" class="btn btn-sm btn-outline-secondary">← Back to Dashboard</a>
+            <a href="{{ path('app_event_new') }}" class="btn btn-sm btn-primary">Create Event</a>
+        </div>
+    </div>
+
+    <div class="card">
+        <div class="table-responsive">
+            <table class="table table-hover mb-0">
+                <thead class="table-light">
+                    <tr>
+                        <th>Event</th>
+                        <th>Date</th>
+                        <th>Location</th>
+                        <th>Registrations</th>
+                        <th>Status</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for event in events %}
+                    <tr>
+                        <td>
+                            <div class="fw-bold">{{ event.title }}</div>
+                            <div class="small text-muted">{{ event.description|slice(0, 100) }}{% if event.description|length > 100 %}...{% endif %}</div>
+                        </td>
+                        <td>
+                            <div>{{ event.startAt ? event.startAt.format('M j, Y') : 'No date' }}</div>
+                            <div class="small text-muted">{{ event.startAt ? event.startAt.format('g:i A') : '' }}</div>
+                        </td>
+                        <td>{{ event.location ?: '-' }}</td>
+                        <td>
+                            <span class="badge bg-primary">{{ event.rsvps|length }}</span>
+                        </td>
+                        <td>
+                            {% if event.published %}
+                                <span class="badge bg-success">Published</span>
+                            {% else %}
+                                <span class="badge bg-secondary">Draft</span>
+                            {% endif %}
+                        </td>
+                        <td>
+                            <div class="d-flex gap-1">
+                                <a href="{{ path('app_admin_event_show', {id: event.id}) }}" class="btn btn-sm btn-outline-primary">View</a>
+                                <a href="{{ path('app_admin_event_edit', {id: event.id}) }}" class="btn btn-sm btn-outline-secondary">Edit</a>
+                                  <form method="post" action="{{ path('app_admin_event_toggle', {id: event.id}) }}" class="d-inline">
+                                    <input type="hidden" name="_token" value="{{ csrf_token('toggle_event_' ~ event.id) }}">
+                                    <button class="btn btn-sm btn-outline-{{ event.published ? 'warning' : 'success' }}" type="submit">
+                                        {{ event.published ? 'Unpublish' : 'Publish' }}
+                                    </button>
+                                </form>
+                                
+                                <form method="post" action="{{ path('app_admin_event_delete', {id: event.id}) }}" class="d-inline" onsubmit="return confirm('Delete this event?');">
+                                    <input type="hidden" name="_token" value="{{ csrf_token('delete_event_' ~ event.id) }}">
+                                    <button class="btn btn-sm btn-outline-danger" type="submit">Delete</button>
+                                </form>
+                            </div>
+                        </td>
+                    </tr>
+                    {% else %}
+                    <tr>
+                        <td colspan="6" class="text-center text-muted py-4">No events found</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+{% endblock %}

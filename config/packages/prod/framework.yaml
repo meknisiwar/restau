@@ -1,0 +1,34 @@
+# Configuration optimisée pour la production
+framework:
+    # Désactiver les annotations en production
+    annotations: false
+    
+    # Cache optimisé
+    cache:
+        app: cache.adapter.filesystem
+        system: cache.adapter.system
+        pools:
+            cache.adapter.redis:
+                adapter: cache.adapter.redis
+                provider: redis://localhost
+    
+    # Session sécurisée
+    session:
+        handler_id: session.handler.native_file
+        cookie_secure: auto
+        cookie_samesite: lax
+        cookie_httponly: true
+        cookie_lifetime: 3600
+        gc_maxlifetime: 3600
+
+    # Validation optimisée
+    validation:
+        cache: validator.mapping.cache.adapter
+
+    # Serializer optimisé
+    serializer:
+        cache: serializer.mapping.cache.adapter
+
+    # Router optimisé
+    router:
+        cache_dir: '%kernel.cache_dir%'

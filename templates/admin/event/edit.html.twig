@@ -1,0 +1,101 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Admin - Edit {{ event.title }}{% endblock %}
+
+{% block body %}
+<div class="container my-5">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h1>Edit Event</h1>
+        <a href="{{ path('app_admin_event_show', {id: event.id}) }}" class="btn btn-sm btn-outline-secondary">← Back to Event</a>
+    </div>
+
+    <div class="row">
+        <div class="col-md-8">
+            <div class="card">                <div class="card-body">
+                    <form method="post">
+                        <input type="hidden" name="_token" value="{{ csrf_token('edit_event_' ~ event.id) }}">
+                        
+                        <div class="mb-3">
+                            <label for="title" class="form-label">Event Title</label>
+                            <input type="text" class="form-control" id="title" name="title" value="{{ event.title }}" required>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="description" class="form-label">Description</label>
+                            <textarea class="form-control" id="description" name="description" rows="4">{{ event.description }}</textarea>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <label for="startAt" class="form-label">Start Date & Time</label>
+                                    <input type="datetime-local" class="form-control" id="startAt" name="startAt" value="{{ event.startAt ? event.startAt.format('Y-m-d\\TH:i') : '' }}" required>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <label for="endAt" class="form-label">End Date & Time (Optional)</label>
+                                    <input type="datetime-local" class="form-control" id="endAt" name="endAt" value="{{ event.endAt ? event.endAt.format('Y-m-d\\TH:i') : '' }}">
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="location" class="form-label">Location</label>
+                            <input type="text" class="form-control" id="location" name="location" value="{{ event.location }}" placeholder="e.g. Main Hall, Garden Terrace">
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="image" class="form-label">Image URL</label>
+                            <input type="url" class="form-control" id="image" name="image" value="{{ event.image }}" placeholder="https://example.com/image.jpg">
+                            <div class="form-text">Leave empty to use default restaurant image</div>
+                        </div>
+
+                        <div class="mb-3">
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" id="published" name="published" value="1" {{ event.published ? 'checked' : '' }}>
+                                <label class="form-check-label" for="published">
+                                    Published (visible to users)
+                                </label>
+                            </div>
+                        </div>
+
+                        <div class="d-flex gap-2">
+                            <button type="submit" class="btn btn-primary">Update Event</button>
+                            <a href="{{ path('app_admin_event_show', {id: event.id}) }}" class="btn btn-outline-secondary">Cancel</a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-4">
+            <div class="card">
+                <div class="card-body">
+                    <h6>Current Event Image</h6>
+                    <img src="{{ event.image ?: asset('images/food_bg.jpg') }}" class="img-fluid rounded" alt="{{ event.title }}">
+                    
+                    <hr>
+                    
+                    <h6>Event Stats</h6>
+                    <p class="mb-1"><strong>Registrations:</strong> {{ event.rsvps|length }}</p>
+                    <p class="mb-1"><strong>Total Guests:</strong> 
+                        {% set totalGuests = 0 %}
+                        {% for rsvp in event.rsvps %}
+                            {% set totalGuests = totalGuests + rsvp.guests %}
+                        {% endfor %}
+                        {{ totalGuests }}
+                    </p>
+                    <p class="mb-0"><strong>Status:</strong> 
+                        {% if event.published %}
+                            <span class="badge bg-success">Published</span>
+                        {% else %}
+                            <span class="badge bg-secondary">Draft</span>
+                        {% endif %}
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

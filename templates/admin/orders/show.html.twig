@@ -37,16 +37,16 @@
                             {% for item in order.orderItems %}
                             <tr>
                                 <td>{{ item.product.name }}</td>
-                                <td>{{ item.price|number_format(2) }} DT</td>
+                                <td>{{ item.price|number_format(0) }} DT</td>
                                 <td>{{ item.quantity }}</td>
-                                <td><strong class="text-primary">{{ (item.price * item.quantity)|number_format(2) }} DT</strong></td>
+                                <td><strong class="text-primary">{{ (item.price * item.quantity)|number_format(0) }} DT</strong></td>
                             </tr>
                             {% endfor %}
                         </tbody>
                         <tfoot>
                             <tr class="tr-light-gradient">
                                 <td colspan="3" class="text-end"><strong>Total:</strong></td>
-                                <td><strong class="text-success fs-5">{{ order.totalAmount|number_format(2) }} DT</strong></td>
+                                <td><strong class="text-success fs-5">{{ order.totalAmount|number_format(0) }} DT</strong></td>
                             </tr>
                         </tfoot>
                     </table>

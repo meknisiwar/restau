@@ -76,7 +76,7 @@
                     <div class="card-body">
                         <h5 class="card-title">{{ product.name }}</h5>
                         <p class="card-text">{{ product.description|slice(0, 100) }}{% if product.description|length > 100 %}...{% endif %}</p>
-                        <p class="card-text"><strong>{{ product.price }}DT</strong></p>
+                        <p class="card-text"><strong>{{ product.price|number_format(0) }} DT</strong></p>
                         <a href="{{ path('app_product_show', {id: product.id}) }}" class="btn btn-primary">View Details</a>
                     </div>
                 </div>

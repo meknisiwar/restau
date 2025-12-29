@@ -50,7 +50,7 @@
             </p>
             {% endif %}
 
-            <h3 class="text-success mb-3">{{ product.price }}DT</h3>
+            <h3 class="text-success mb-3">{{ product.price|number_format(0) }} DT</h3>
 
             {% if not product.available %}
             <div class="alert alert-danger">
@@ -147,6 +147,7 @@
 
             {% if is_granted('ROLE_USER') %}
             <form method="post" action="{{ path('app_review_product', {id: product.id}) }}">
+                <input type="hidden" name="_token" value="{{ csrf_token('review_' ~ product.id) }}">
                 <div class="mb-3">
                     <label for="rating" class="form-label">Rating</label>
                     <select id="rating" name="rating" class="form-select form-select-sm">
@@ -159,7 +160,7 @@
                 </div>
                 <div class="mb-3">
                     <label for="comment" class="form-label">Comment</label>
-                    <textarea id="comment" name="comment" rows="4" class="form-control" placeholder="Share your experience (min 2 characters)"></textarea>
+                    <textarea id="comment" name="comment" rows="4" class="form-control" placeholder="Share your experience (min 2 characters)" required minlength="2"></textarea>
                 </div>
                 <button class="btn btn-primary w-100" type="submit">Submit review</button>
             </form>
@@ -178,6 +179,24 @@
         document.addEventListener('DOMContentLoaded', function(){
             if (typeof GLightbox !== 'undefined') {
                 GLightbox({ selector: '.glightbox' });
+            }
+            
+            // Add form validation for review form
+            const reviewForm = document.querySelector('form[action*="app_review_product"]');
+            if (reviewForm) {
+                reviewForm.addEventListener('submit', function(e) {
+                    const comment = this.querySelector('textarea[name="comment"]');
+                    if (comment && comment.value.trim().length < 2) {
+                        e.preventDefault();
+                        alert('Please enter a comment with at least 2 characters.');
+                        comment.focus();
+                        return false;
+                    }
+                    console.log('Review form submitted with:', {
+                        rating: this.querySelector('select[name="rating"]').value,
+                        comment: comment.value
+                    });
+                });
             }
         });
     </script>

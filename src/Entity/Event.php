@@ -3,6 +3,8 @@
 namespace App\Entity;
 
 use App\Repository\EventRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
 
@@ -36,6 +38,17 @@ class Event
 
     #[ORM\Column]
     private bool $published = true;
+
+    /**
+     * @var Collection<int, Rsvp>
+     */
+    #[ORM\OneToMany(targetEntity: Rsvp::class, mappedBy: 'event', orphanRemoval: true)]
+    private Collection $rsvps;
+
+    public function __construct()
+    {
+        $this->rsvps = new ArrayCollection();
+    }
 
     public function getId(): ?int
     {
@@ -111,11 +124,39 @@ class Event
     public function isPublished(): bool
     {
         return $this->published;
-    }
-
-    public function setPublished(bool $published): static
+    }    public function setPublished(bool $published): static
     {
         $this->published = $published;
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Rsvp>
+     */
+    public function getRsvps(): Collection
+    {
+        return $this->rsvps;
+    }
+
+    public function addRsvp(Rsvp $rsvp): static
+    {
+        if (!$this->rsvps->contains($rsvp)) {
+            $this->rsvps->add($rsvp);
+            $rsvp->setEvent($this);
+        }
+
+        return $this;
+    }
+
+    public function removeRsvp(Rsvp $rsvp): static
+    {
+        if ($this->rsvps->removeElement($rsvp)) {
+            // set the owning side to null (unless already changed)
+            if ($rsvp->getEvent() === $this) {
+                $rsvp->setEvent(null);
+            }
+        }
+
         return $this;
     }
 }

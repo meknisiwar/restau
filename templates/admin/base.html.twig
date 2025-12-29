@@ -312,9 +312,11 @@
             </a>
             <a class="nav-link {{ app.request.get('_route') starts with 'app_admin_order' ? 'active' : '' }}" href="{{ path('app_admin_orders') }}">
                 <i class="bi bi-cart-check"></i> Orders
-            </a>
-            <a class="nav-link {{ app.request.get('_route') starts with 'app_admin_reservation' ? 'active' : '' }}" href="{{ path('app_admin_reservations') }}">
+            </a>            <a class="nav-link {{ app.request.get('_route') starts with 'app_admin_reservation' ? 'active' : '' }}" href="{{ path('app_admin_reservations') }}">
                 <i class="bi bi-calendar-check"></i> Reservations
+            </a>
+            <a class="nav-link {{ app.request.get('_route') starts with 'app_admin_event' ? 'active' : '' }}" href="{{ path('app_admin_events') }}">
+                <i class="bi bi-calendar-event"></i> Events
             </a>
             <a class="nav-link {{ app.request.get('_route') starts with 'app_admin_user' ? 'active' : '' }}" href="{{ path('app_admin_users') }}">
                 <i class="bi bi-people"></i> Users

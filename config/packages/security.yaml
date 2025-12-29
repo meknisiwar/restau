@@ -20,6 +20,16 @@ security:
             logout:
                 path: app_logout
                 target: app_home
+                # Invalidation complète de la session pour sécurité
+                invalidate_session: true
+                delete_cookies:
+                    PHPSESSID: { path: null, domain: null }
+
+            # Protection contre les attaques de session
+            remember_me:
+                secret: '%kernel.secret%'
+                lifetime: 604800 # 1 semaine
+                path: /
 
             # activate different ways to authenticate
             # https://symfony.com/doc/current/security.html#the-firewall
