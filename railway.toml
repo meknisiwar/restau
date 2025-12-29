@@ -1,20 +1,13 @@
-# Configuration pour Railway.app
-services:
-  app:
-    build:
-      commands:
-        - composer install --no-dev --optimize-autoloader
-        - php bin/console cache:clear --env=prod
-        - php bin/console doctrine:migrations:migrate --no-interaction --env=prod
-    start:
-      command: php -S 0.0.0.0:$PORT -t public/
-    variables:
-      APP_ENV: prod
-      APP_DEBUG: 0
-      
-  database:
-    image: postgres:15
-    variables:
-      POSTGRES_DB: restau
-      POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: ${{POSTGRES_PASSWORD}}
+[build]
+builder = "nixpacks"
+
+[deploy]
+startCommand = "php -S 0.0.0.0:$PORT -t public/"
+healthcheckPath = "/"
+healthcheckTimeout = 100
+restartPolicyType = "never"
+
+[env]
+APP_ENV = "prod"
+APP_DEBUG = "0"
+PORT = { default = "8000" }

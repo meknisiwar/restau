@@ -1,0 +1,14 @@
+# Configuration Nixpacks pour Railway
+[phases.build]
+dependsOn = ["install"]
+cmds = [
+    "composer install --no-dev --optimize-autoloader --no-progress --no-interaction",
+    "php bin/console cache:clear --env=prod --no-debug --no-warmup",
+    "php bin/console cache:warmup --env=prod --no-debug"
+]
+
+[phases.install]
+cmds = ["composer install --no-dev --optimize-autoloader"]
+
+[start]
+cmd = "php -S 0.0.0.0:$PORT -t public/"

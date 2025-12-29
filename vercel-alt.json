@@ -1,0 +1,30 @@
+# Configuration Vercel (serverless)
+{
+    "version": 2,
+    "builds": [
+        {
+            "src": "public/index.php",
+            "use": "vercel-php@0.6.0"
+        }
+    ],
+    "routes": [
+        {
+            "src": "/(css|js|images|uploads)/(.+)",
+            "dest": "public/$1/$2"
+        },
+        {
+            "src": "/(.*)",
+            "dest": "public/index.php"
+        }
+    ],
+    "env": {
+        "APP_ENV": "prod",
+        "APP_DEBUG": "0"
+    },
+    "functions": {
+        "public/index.php": {
+            "runtime": "vercel-php@0.6.0",
+            "excludeFiles": "var/**"
+        }
+    }
+}
