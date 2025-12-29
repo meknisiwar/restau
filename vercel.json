@@ -3,10 +3,17 @@
     "builds": [
         {
             "src": "public/index.php",
-            "use": "@vercel/php"
+            "use": "vercel-php@0.7.1"
         }
     ],
     "routes": [
+        {
+            "src": "/(css|js|images|uploads)/(.+)",
+            "dest": "public/$1/$2",
+            "headers": {
+                "Cache-Control": "public, max-age=31536000"
+            }
+        },
         {
             "src": "/(.*)",
             "dest": "public/index.php"
@@ -14,6 +21,12 @@
     ],
     "env": {
         "APP_ENV": "prod",
-        "APP_DEBUG": "0"
+        "APP_DEBUG": "0",
+        "APP_SECRET": "9478e5e00fcb2a444f655e9e4da21f0d"
+    },
+    "functions": {
+        "public/index.php": {
+            "runtime": "vercel-php@0.7.1"
+        }
     }
 }
