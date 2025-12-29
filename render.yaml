@@ -1,0 +1,17 @@
+version: 1
+
+services:
+  - type: web
+    name: restau-web
+    env: docker
+    dockerfilePath: ./Dockerfile
+    plan: free
+    buildCommand: composer install --no-dev --optimize-autoloader && php bin/console cache:clear --env=prod --no-debug
+    startCommand: php -S 0.0.0.0:$PORT -t public/
+    envVars:
+      - key: APP_ENV
+        value: prod
+      - key: APP_DEBUG
+        value: "0"
+      - key: APP_SECRET
+        value: "9478e5e00fcb2a444f655e9e4da21f0d"
